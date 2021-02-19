@@ -1,25 +1,17 @@
 import { Collection } from "./Collection";
-import { User } from "./User";
+import { Publisable, Comment, Like, Status } from "./Publishable";
 
-export class Post {
-    id;
+export class Post implements Publisable {
+    id: any;
     createdDate: Date;
+    lastEditedDate: Date;
     title: string;
     text: string;
-    media?: string;
-    collections: Collection[];
-    comments: Comment[];
-}
-
-export class Comment {
-    id;
-    author: UserVm;
-    createdDate: Date;
-    text: string;
-}
-
-export class UserVm {
-    firstName: string;
-    lastName: string;
-    profileImage?: string;
+    comments?: Comment[];
+    likes?: Like[];
+    pinned: boolean;
+    status: Status;
+    
+    media?: string
+    collections?: Collection[]
 }
