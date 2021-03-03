@@ -1,8 +1,11 @@
+import { NgRedux } from '@angular-redux/store';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { Post } from '../entities/Post';
+import { PostsActions } from '../store/posts.actions';
+import { AppState } from '../store/store';
 
 @Component({
   selector: 'app-neweditpost',
@@ -12,13 +15,19 @@ import { Post } from '../entities/Post';
 export class NeweditpostComponent implements OnInit {
   public selectedPost: Post;
   public postForm: FormGroup;
+  public isHappy: boolean;
 
   constructor(private route: ActivatedRoute, private tempDataService: DataService,
-    private fb: FormBuilder, private router: Router) { }
+    private fb: FormBuilder, private router: Router, private ngRedux: NgRedux<AppState>,
+    private postsActions: PostsActions) { }
 
   ngOnInit(): void {
     const id: string = this.route.snapshot.paramMap.get('myId');
     console.log(id);
+
+    this.ngRedux.select(x => x.posts).subscribe(result => {
+      this.isHappy = result.isHappy;
+    });
 
     
     this.selectedPost = this.tempDataService.getPosts().find(post => post.id === id);
@@ -32,6 +41,10 @@ export class NeweditpostComponent implements OnInit {
       title: [this.selectedPost.getTitle(), Validators.required],
       text: [this.selectedPost.text, Validators.required],
     });
+  }
+
+  switchHappy() {
+    this.postsActions.setHappy(!this.isHappy);
   }
 
   onSubmitPost() {

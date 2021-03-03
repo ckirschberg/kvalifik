@@ -17,6 +17,9 @@ import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
 import { PostComponent } from './post/post.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DevToolsExtension, NgRedux, NgReduxModule } from '@angular-redux/store';
+
+import { AppState, rootReducer } from './store/store'; // Added this to get the root reducer
 
 @NgModule({
   declarations: [
@@ -33,9 +36,16 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     MatButtonModule, MatToolbarModule, MatIconModule, MatListModule, AppRoutingModule,
-    MatInputModule, MatCardModule
+    MatInputModule, MatCardModule,
+    NgReduxModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(private ngRedux: NgRedux<AppState>,
+    private devTool: DevToolsExtension) {
+        
+      this.ngRedux.configureStore(rootReducer, {});
+    }
+ }
